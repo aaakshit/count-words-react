@@ -12,8 +12,14 @@ export default function Textform(props) {
         // hjvhj
         setText(event.target.value);
     }
-    const replace =()=>{
+    const [isok,setisok] =useState(false);
 
+    const speak=()=>{
+      setisok(!isok);
+
+      let msg=new SpeechSynthesisUtterance();
+      msg.text=text;
+      window.speechSynthesis.speak(msg);
     }
   return (
     <>
@@ -28,8 +34,8 @@ export default function Textform(props) {
   <label htmlFor="myBox" className="form-label">Example text area</label>
   <textarea className="form-control" id="myBox" rows="8" value={text} onChange={handleonchange}></textarea>
 </div>
-<button className="btn btn-primary" onClick={handle}>Convert to uppercase</button>
-<button className="btn btn-primary" onClick={replace}>Replace</button>
+<button className="btn btn-primary mx-2 my-2" onClick={handle}>Convert to uppercase</button>
+<button className="btn btn-primary" onClick={speak}>{isok?("Stop"):("Speak")}</button>
     </div>
     <div className="container my-3">
         <h1>
