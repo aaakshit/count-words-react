@@ -12,15 +12,26 @@ export default function Textform(props) {
         // hjvhj
         setText(event.target.value);
     }
-    const [isok,setisok] =useState(false);
+    // const [isok,setisok] =useState(false);
+    // const [isokk,setisokk] =useState(true);
 
-    const speak=()=>{
-      setisok(!isok);
+    const [isSpeaking, setIsSpeaking] = useState(false);
+    const [lastCharIndex, setLastCharIndex] = useState(0);
 
-      let msg=new SpeechSynthesisUtterance();
-      msg.text=text;
-      window.speechSynthesis.speak(msg);
-    }
+
+const speak = () => {
+  if (isSpeaking) {
+    window.speechSynthesis.cancel();
+  } else {
+    let msg = new SpeechSynthesisUtterance();
+    msg.text = text.substring(lastCharIndex);
+    msg.onboundary = (event) => {
+      setLastCharIndex(event.charIndex + lastCharIndex);
+    };
+    window.speechSynthesis.speak(msg);
+  }
+  setIsSpeaking(!isSpeaking);
+}
   return (
     <>
     <div className="container">
@@ -35,7 +46,9 @@ export default function Textform(props) {
   <textarea className="form-control" id="myBox" rows="8" value={text} onChange={handleonchange}></textarea>
 </div>
 <button className="btn btn-primary mx-2 my-2" onClick={handle}>Convert to uppercase</button>
-<button className="btn btn-primary" onClick={speak}>{isok?("Stop"):("Speak")}</button>
+<button className="btn btn-primary mx-2 my-2" onClick={speak}>{isSpeaking?'stop':'start'}</button>
+
+{/* {cond ? () :()} */}
     </div>
     <div className="container my-3">
         <h1>
